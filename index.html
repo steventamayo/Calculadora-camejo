@@ -288,7 +288,10 @@ return;
 let url="https://wa.me/?text="+encodeURIComponent("📊 Cálculo de aluminio:\n\n"+texto);
 window.open(url,"_blank");
 }
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
 </script>
-
 </body>
 </html>
