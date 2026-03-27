@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculadora PRO</title>
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
-
 <style>
 body{margin:0;font-family:Arial;background:#020617;color:white;}
 header{padding:15px;text-align:center;font-weight:bold;background:#0f172a;}
@@ -33,13 +30,12 @@ input, textarea{width:100%;padding:10px;margin-top:8px;border-radius:8px;border:
 <header>⚡ Calculadora PRO</header>
 
 <div class="app">
-
 <div class="botones">
 <button class="btn v" onclick="agregar('v2')">🪟 Ventana 2</button>
 <button class="btn v" onclick="agregar('v3')">🪟 Ventana 3</button>
 <button class="btn v" onclick="agregar('v4')">🪟 Ventana 4</button>
 <button class="btn p" onclick="agregar('puerta')">🚪 Puerta</button>
-<button class="btn b" onclick="agregar('bano')">🚿 Cortina de baño</button>
+<button class="btn b" onclick="agregar('bano')">🚿 Cortina baño</button>
 </div>
 
 <div id="lista"></div>
@@ -54,12 +50,20 @@ Vidrio: 0<br>
 Tuallero: 0<br>
 Porta Tuallero: 0
 </div>
-
 </div>
 
 <script>
 let contador=0;
-let totales={riel:0,jamba:0,vertical:0,horizontal:0,vidrio:0,tuallero:0,portaTuallero:0};
+
+let totales={
+riel:0,
+jamba:0,
+vertical:0,
+horizontal:0,
+vidrio:0,
+tuallero:0,
+portaTuallero:0
+};
 
 function r(n){return isNaN(n)?0:Number(n.toFixed(2));}
 
@@ -95,9 +99,8 @@ let html=`
 
 <button class="btn" style="background:#25D366;margin-top:10px"
 onclick="whatsapp(${contador})">
-📲 Enviar por WhatsApp
+📲 WhatsApp
 </button>
-
 </div>
 `;
 
@@ -105,9 +108,10 @@ document.getElementById("lista").insertAdjacentHTML("beforeend",html);
 }
 
 function calcular(tipo,id){
-let multi=document.getElementById("multi"+id).value;
 
 reiniciarTotales();
+
+let multi=document.getElementById("multi"+id).value;
 
 if(multi.trim()!=""){
 let lineas=multi.split("\n");
@@ -141,254 +145,7 @@ document.getElementById("res"+id).innerHTML=calc.html;
 
 function operar(tipo,a,h,sumar){
 let html="";
-let add=(k,v)=>{if(sumar && !isNaN(v) && totales.hasOwnProperty(k)) totales[k]+=v; return r(v);};
-
-if(tipo=="v2"){
-html=`Riel: ${add("riel",a)}<br>
-Jamba: ${add("jamba",h-0.8)}<br>
-Vertical: ${add("vertical",h-2.7)}<br>
-Horizontal: ${add("horizontal",(a-11)/2)}<br>
-Malla Alto: ${r(h-2.5)}<br>
-Malla Ancho: ${r((a-4.4)/2)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/2)}`;
-}
-
-if(tipo=="v3"){
-html=`Riel: ${add("riel",a)}<br>
-Jamba: ${add("jamba",h-0.8)}<br>
-Vertical: ${add("vertical",h-2.7)}<br>
-Horizontal: ${add("horizontal",(a-11)/3)}<br>
-Malla Alto: ${r(h-2.5)}<br>
-Malla Ancho: ${r((a-4.4)/3)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/3)}`;
-}
-
-if(tipo=="v4"){
-html=`Riel: ${add("riel",a)}<br>
-Jamba: ${add("jamba",h-0.8)}<br>
-Vertical: ${add("vertical",h-2.7)}<br>
-Horizontal: ${add("horizontal",(a-11)/4)}<br>
-Malla Alto: ${r(h-2.5)}<br>
-Malla Ancho: ${r((a-4.4)/4)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/4)}`;
-}
-
-if(tipo=="puerta"){
-html=`Marco Alto: ${add("jamba",h-1)}<br>
-Marco Ancho: ${add("riel",a)}<br>
-Hoja Alto: ${r(h-5)}<br>
-Hoja Ancho: ${r(a-6)}`;
-}
-
-if(tipo=="bano"){
-html=`Riel Superior: ${add("riel", a)}<br>
-Riel Inferior: ${add("riel", a-0.5)}<br>
-Jamba: ${add("jamba", h-4.4)}<br>
-Vertical: ${add("vertical", h-6)}<br>
-Horizontal: ${add("horizontal", (a+6)/2)}<br>
-Toallero: ${(A-12)/2}<br>
-Porta Tuallero: ${add("portaTuallero", 10)}`;
-}
-
-return {html};
-}
-
-function reiniciarTotales(){
-totales={riel:0,jamba:0,vertical:0,horizontal:0,vidrio:0,tuallero:0,portaTuallero:0};
-}
-
-function mostrarTotales(){
-document.getElementById("totales").innerHTML=`
-<b>📊 Totales:</b><br>
-Riel: ${r(totales.riel)}<br>
-Jamba: ${r(totales.jamba)}<br>
-Vertical: ${r(totales.vertical)}<br>
-Horizontal: ${r(totales.horizontal)}<br>
-Vidrio: ${r(totales.vidrio)}<br>
-Tuallero: ${r(totales.tuallero)}<br>
-Porta Tuallero: ${r(totales.portaTuallero)}
-`;
-}
-
-function eliminar(id){
-document.getElementById("card"+id).remove();
-}
-
-function whatsapp(id){
-let texto=document.getElementById("res"+id).innerText;
-if(!texto){alert("Primero calcula");return;}
-let url="https://wa.me/?text="+encodeURIComponent("📊 Cálculo de aluminio:\n\n"+texto);
-window.open(url,"_blank");
-}
-
-// ✅ OFFLINE
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
-
-</body>
-</html>}
-
-.header-card{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-font-weight:bold;
-}
-
-input, textarea{
-width:100%;
-padding:10px;
-margin-top:8px;
-border-radius:8px;
-border:none;
-background:#020617;
-color:white;
-}
-
-.buttons{
-display:flex;
-gap:10px;
-margin-top:10px;
-}
-
-.calc{background:#3b82f6;}
-.del{background:#ef4444;}
-
-.resultado{
-margin-top:10px;
-background:#020617;
-padding:10px;
-border-radius:10px;
-}
-
-.total{
-background:#111827;
-padding:15px;
-border-radius:15px;
-margin-top:20px;
-}
-</style>
-</head>
-
-<body>
-
-<header>⚡ Calculadora PRO</header>
-
-<div class="app">
-
-<div class="botones">
-<button class="btn v" onclick="agregar('v2')">🪟 Ventana 2</button>
-<button class="btn v" onclick="agregar('v3')">🪟 Ventana 3</button>
-<button class="btn v" onclick="agregar('v4')">🪟 Ventana 4</button>
-<button class="btn p" onclick="agregar('puerta')">🚪 Puerta</button>
-<button class="btn b" onclick="agregar('bano')">🚿 Cortina de baño</button>
-</div>
-
-<div id="lista"></div>
-
-<div class="total" id="totales">
-<b>📊 Totales:</b><br>
-Riel: 0<br>
-Jamba: 0<br>
-Vertical: 0<br>
-Horizontal: 0<br>
-Vidrio: 0<br>
-Tuallero: 0<br>
-Porta Tuallero: 0
-</div>
-
-</div>
-
-<script>
-let contador=0;
-let totales={riel:0,jamba:0,vertical:0,horizontal:0,vidrio:0,tuallero:0,portaTuallero:0};
-
-function r(n){return isNaN(n)?0:Number(n.toFixed(2));}
-
-function datosTipo(tipo){
-if(tipo=="v2") return ["🪟","Ventana 2 hojas"];
-if(tipo=="v3") return ["🪟","Ventana 3 hojas"];
-if(tipo=="v4") return ["🪟","Ventana 4 hojas"];
-if(tipo=="puerta") return ["🚪","Puerta"];
-if(tipo=="bano") return ["🚿","Cortina de baño"];
-}
-
-function agregar(tipo){
-contador++;
-let [icono,titulo]=datosTipo(tipo);
-
-let html=`
-<div class="card" id="card${contador}">
-<div class="header-card">${icono} ${titulo}</div>
-
-<input id="ancho${contador}" placeholder="Ancho (cm)">
-<input id="alto${contador}" placeholder="Alto (cm)">
-
-<textarea id="multi${contador}" placeholder="Ej:
-100x120
-80x90"></textarea>
-
-<div class="buttons">
-<button class="btn calc" onclick="calcular('${tipo}',${contador})">Calcular</button>
-<button class="btn del" onclick="eliminar(${contador})">Eliminar</button>
-</div>
-
-<div class="resultado" id="res${contador}"></div>
-
-<button class="btn" style="background:#25D366;margin-top:10px"
-onclick="whatsapp(${contador})">
-📲 Enviar por WhatsApp
-</button>
-
-</div>
-`;
-
-document.getElementById("lista").insertAdjacentHTML("beforeend",html);
-}
-
-function calcular(tipo,id){
-let multi=document.getElementById("multi"+id).value;
-
-reiniciarTotales();
-
-if(multi.trim()!=""){
-let lineas=multi.split("\n");
-let resultado="";
-
-lineas.forEach((l,i)=>{
-let p=l.split("x");
-if(p.length==2){
-let a=parseFloat(p[0]);
-let h=parseFloat(p[1]);
-let calc=operar(tipo,a,h,true);
-resultado+=`<b>#${i+1}</b><br>`+calc.html+"<hr>";
-}
-});
-
-mostrarTotales();
-document.getElementById("res"+id).innerHTML=resultado;
-return;
-}
-
-let ancho=parseFloat(document.getElementById("ancho"+id).value);
-let alto=parseFloat(document.getElementById("alto"+id).value);
-
-if(!ancho||!alto){alert("Ingresa valores");return;}
-
-let calc=operar(tipo,ancho,alto,true);
-mostrarTotales();
-
-document.getElementById("res"+id).innerHTML=calc.html;
-}
-
-function operar(tipo,a,h,sumar){
-let html="";
-let add=(k,v)=>{if(sumar && !isNaN(v) && totales.hasOwnProperty(k)) totales[k]+=v; return r(v);};
+let add=(k,v)=>{if(sumar && !isNaN(v)) totales[k]+=v; return r(v);};
 
 if(tipo=="v2"){
 html=`
@@ -398,8 +155,8 @@ Vertical: ${add("vertical",h-2.7)}<br>
 Horizontal: ${add("horizontal",(a-11)/2)}<br>
 Malla Alto: ${r(h-2.5)}<br>
 Malla Ancho: ${r((a-4.4)/2)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/2)}
+Vidrio Alto: ${add("vidrio",h-9)}<br>
+Vidrio Ancho: ${add("vidrio",(a-8.4)/2)}
 `;
 }
 
@@ -411,8 +168,8 @@ Vertical: ${add("vertical",h-2.7)}<br>
 Horizontal: ${add("horizontal",(a-11)/3)}<br>
 Malla Alto: ${r(h-2.5)}<br>
 Malla Ancho: ${r((a-4.4)/3)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/3)}
+Vidrio Alto: ${add("vidrio",h-9)}<br>
+Vidrio Ancho: ${add("vidrio",(a-8.4)/3)}
 `;
 }
 
@@ -424,8 +181,8 @@ Vertical: ${add("vertical",h-2.7)}<br>
 Horizontal: ${add("horizontal",(a-11)/4)}<br>
 Malla Alto: ${r(h-2.5)}<br>
 Malla Ancho: ${r((a-4.4)/4)}<br>
-Vidrio Alto: ${r(h-9)}<br>
-Vidrio Ancho: ${r((a-8.4)/4)}
+Vidrio Alto: ${add("vidrio",h-9)}<br>
+Vidrio Ancho: ${add("vidrio",(a-8.4)/4)}
 `;
 }
 
@@ -433,8 +190,8 @@ if(tipo=="puerta"){
 html=`
 Marco Alto: ${add("jamba",h-1)}<br>
 Marco Ancho: ${add("riel",a)}<br>
-Hoja Alto: ${r(h-5)}<br>
-Hoja Ancho: ${r(a-6)}
+Hoja Alto: ${add("vidrio",h-5)}<br>
+Hoja Ancho: ${add("vidrio",a-6)}
 `;
 }
 
@@ -445,7 +202,7 @@ Riel Inferior: ${add("riel", a-0.5)}<br>
 Jamba: ${add("jamba", h-4.4)}<br>
 Vertical: ${add("vertical", h-6)}<br>
 Horizontal: ${add("horizontal", (a+6)/2)}<br>
-Tuallero: ${add("tuallero", a-56)}<br>
+Tuallero: ${add("tuallero", a-12)/2}<br>
 Porta Tuallero: ${add("portaTuallero", 10)}
 `;
 }
@@ -476,19 +233,17 @@ document.getElementById("card"+id).remove();
 
 function whatsapp(id){
 let texto=document.getElementById("res"+id).innerText;
-
-if(!texto){
-alert("Primero calcula");
-return;
-}
+if(!texto){alert("Primero calcula");return;}
 
 let url="https://wa.me/?text="+encodeURIComponent("📊 Cálculo de aluminio:\n\n"+texto);
 window.open(url,"_blank");
 }
-<script>
+
+// offline
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
+navigator.serviceWorker.register("sw.js");
 }
 </script>
+
 </body>
 </html>
